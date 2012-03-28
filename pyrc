@@ -3,7 +3,7 @@
 # pyrc - Wrapper to make it easier for ocf users to use irc
 # Author: Nader Morshed
 # Version: 0.0.2
-# Requires python >= 2.4
+# Requires python >= 2.4 (2.6?)
 
 TERM_EMUS = {
     'screen': {
@@ -26,7 +26,15 @@ IRCS = {
         'process': 'irssi'
         },
     }
-                  
+
+IRC_NETWORKS = {
+    'ocf': {
+        # hostname, port, use_ssl, verify_ssl
+        'servers': [('irc.ocf.berkeley.edu', 6697, True, False)],
+        'channels': ['#ocf'],
+        },
+    }
+
 def screen_defaults():
     """Copies over the system default screen configuration and enables UTF-8."""
 
@@ -60,20 +68,30 @@ def irssi_defaults():
                 out.write(line)
 
                 if 'servers = (' in line:
-                    out.write('  {\n'
-                              '    address = "irc.ocf.berkeley.edu";\n'
-                              '    chatnet = "ocf";\n'
-                              '    port = "6697";\n'
-                              '    use_ssl = "yes"\n;'
-                              '    ssl_verify = "no";\n'
-                              '    autoconnect = "yes";\n'
-                              '  },\n')
+                    for name, network in IRC_NETWORKS.items():
+                        for hostname, port, ssl, verify in network['servers']:
+                            out.write('  {{\n'
+                                      '    address = "{0}";\n'
+                                      '    chatnet = "{1}";\n'
+                                      '    port = "{2}";\n'
+                                      '    use_ssl = "{3}"\n;'
+                                      '    ssl_verify = "{4}";\n'
+                                      '    autoconnect = "yes";\n'
+                                      '  }}\n'
+                                      .format(hostname, name, port,
+                                              'yes' if ssl else 'no',
+                                              'yes' if verify else 'no'))
 
                 if 'chatnets = {' in line:
-                    out.write('  ocf = { type = "IRC"; };\n')
+                    for name, network in IRC_NETWORKS.items():
+                        out.write('  {0} = {{ type = "IRC"; }};\n'
+                                  .format(name))
 
                 if 'channels = (' in line:
-                    out.write('  { name = "#ocf"; chatnet = "ocf"; autojoin = "Yes"; },\n')
+                    for name, network in IRC_NETWORKS.items():
+                        for channel in network['channels']:
+                            out.write('  {{ name = "{0}"; chatnet = "{1}"; autojoin = "Yes"; }},\n'
+                                      .format(channel, name))
 
                 if '  core = {' in line:
                     core = True
