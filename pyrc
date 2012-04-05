@@ -2,7 +2,7 @@
 
 # pyrc - Wrapper to make it easier for ocf users to use irc
 # Author: Nader Morshed
-# Version: 0.0.3
+# Version: 0.0.4
 # Requires python >= 2.4 (2.6?)
 
 TERM_EMUS = {
@@ -155,7 +155,7 @@ def connect_irc(emu, session):
     if find_emu_sessions(emu, session):
         call(emu['connect'] + [session])
     else:
-        print 'irc session does not exist, double check it was started'
+        raise Exception('irc session does not exist')
 
 if __name__ == '__main__':
     import sys
@@ -179,12 +179,10 @@ if __name__ == '__main__':
     (options, args) = parser.parse_args()
 
     if options.emu not in TERM_EMUS.keys():
-        print 'Unknown terminal emulator:', options.emu
-        sys.exit(1)
+        raise Exception('Unknown terminal emulator: ' + options.emu)
 
     if options.irc not in IRCS.keys():
-        print 'Unknown irc client:', options.irc
-        sys.exit(1)
+        raise Exception('Unknown irc client: ' + options.irc)
 
     if options.start or not options.connect:
         start_irc(TERM_EMUS[options.emu], options.session, IRCS[options.irc])
