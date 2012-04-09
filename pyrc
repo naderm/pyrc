@@ -51,7 +51,7 @@ def screen_defaults():
             f = open(screenrc, 'a')
             f.write('\ndefutf8 on\n')
             f.close()
-        except OSError, e:
+        except OSError as e:
             print e
 
 def irssi_defaults():
@@ -115,7 +115,7 @@ def irssi_defaults():
 
             etc.close()
             out.close()
-        except OSError, e:
+        except OSError as e:
             print e
 
 def install_defaults(emu, irc):
