@@ -35,6 +35,8 @@ IRC_NETWORKS = {
         },
     }
 
+LOG_BY_DEFAULT = True
+
 def screen_defaults():
     """Copies over the system default screen configuration and enables UTF-8."""
 
@@ -102,9 +104,12 @@ def irssi_defaults():
                 if '  };' in line and core:
                     out.write('  "fe-common/core" = {\n'
                               '    term_charset = "utf-8";\n'
-                              '    AUTOLOG_PATH = "~/irclogs/$tag/${0}/%Y/%m/%d.log";\n'
-                              '    autolog = "yes";\n'
-                              '    bell_beeps = "yes";\n'
+                              '    AUTOLOG_PATH = "~/irclogs/$tag/${0}/%Y/%m/%d.log";\n')
+
+                    if LOG_BY_DEFAULT:
+                        out.write('    autolog = "yes";\n')
+
+                    out.write('    bell_beeps = "yes";\n'
                               '    beep_msg_level = "MSGS NOTICES DCC DCCMSGS HILIGHT";\n'
                               '  };\n')
 
