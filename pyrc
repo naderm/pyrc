@@ -35,6 +35,8 @@ IRC_NETWORKS = {
         },
     }
 
+DEFAULT_TERM_EMU = 'screen'
+DEFAULT_IRC_CLIENT = 'irssi'
 LOG_BY_DEFAULT = True
 
 def screen_defaults():
@@ -52,7 +54,7 @@ def screen_defaults():
             f.write('\ndefutf8 on\n')
             f.close()
         except OSError as e:
-            print e
+            print(e)
 
 def irssi_defaults():
     """Creates the default configuration for irssi with the ocf server included."""
@@ -116,7 +118,7 @@ def irssi_defaults():
             etc.close()
             out.close()
         except OSError as e:
-            print e
+            print(e)
 
 def install_defaults(emu, irc):
     """Sets up the default configuration for the terminal emulator and the irc client."""
@@ -172,10 +174,10 @@ if __name__ == '__main__':
                       help='Just start the irc client, don\'t connect to it')
     parser.add_option('-c', '--connect', action='store_true', default=False,
                       help='Don\'t start the irc client, only connect to it if possible')
-    parser.add_option('-e', '--emu', default=TERM_EMUS.keys()[0],
+    parser.add_option('-e', '--emu', default=DEFAULT_TERM_EMU,
                       help='terminal emulator to use: ' + ', '.join(TERM_EMUS.keys()) +
                       ' [default: %default]')
-    parser.add_option('-i', '--irc', default=IRC_CLIENTS.keys()[0],
+    parser.add_option('-i', '--irc', default=DEFAULT_IRC_CLIENT,
                       help='irc client to use: ' + ', '.join(IRC_CLIENTS.keys()) +
                       ' [default: %default]')
     parser.add_option('-n', '--session', default="irc",
