@@ -1,7 +1,7 @@
 Pyrc
 =====
 
-A simple script to wrap around screen, tmux, and irssi.
+A simple, one file script to wrap around a virtual terminal and an irc client for easy irc session management. Currently supports screen and tmux for the virtual terminal and irssi for the client, but can be easily extended.
 
 Usage
 -----
