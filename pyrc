@@ -149,10 +149,12 @@ def find_emu_sessions(emu, session):
     """Checks if the terminal emulator session is already open."""
 
     from subprocess import Popen, PIPE
-    from sys import getdefaultencoding
+    from sys import getdefaultencoding, version_info
 
     out = Popen(emu['list'], stdout=PIPE, stderr=PIPE).stdout
-    out = [str(i, encoding=getdefaultencoding()) for i in out]
+
+    if version_info[0] >= 3:
+        out = [str(i, encoding=getdefaultencoding()) for i in out]
 
     return [line for line in out if session in line]
     
