@@ -3,11 +3,6 @@ Pyrc
 
 A simple, one file script to wrap around a virtual terminal and an irc client for easy irc session management.
 
-Dependencies
-------------
-
-Currently supports screen and tmux for the virtual terminal and irssi for the client. Simply having irssi and either screen or tmux installed and in $PATH is enough.
-
 Usage
 -----
 
@@ -32,4 +27,9 @@ For more information, see the help flag:
       -i IRC, --irc=IRC     irc client to use: irssi [default: irssi]
       -n SESSION, --session=SESSION
                             name to give to terminal emulator session
+
+Dependencies
+------------
+
+Currently supports screen and tmux for the virtual terminal and irssi for the client. Simply having irssi and either screen or tmux installed and in $PATH is enough.
 
