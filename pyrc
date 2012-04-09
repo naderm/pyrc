@@ -19,7 +19,7 @@ TERM_EMUS = {
         },
     }
 
-IRCS = {
+IRC_CLIENTS = {
     'irssi': {
         'start': ['irssi'],
         'defaults': 'irssi_defaults()',
@@ -175,8 +175,8 @@ if __name__ == '__main__':
     parser.add_option('-e', '--emu', default=TERM_EMUS.keys()[0],
                       help='terminal emulator to use: ' + ', '.join(TERM_EMUS.keys()) +
                       ' [default: %default]')
-    parser.add_option('-i', '--irc', default=IRCS.keys()[0],
-                      help='irc client to use: ' + ', '.join(IRCS.keys()) +
+    parser.add_option('-i', '--irc', default=IRC_CLIENTS.keys()[0],
+                      help='irc client to use: ' + ', '.join(IRC_CLIENTS.keys()) +
                       ' [default: %default]')
     parser.add_option('-n', '--session', default="irc",
                        help='name to give to terminal emulator session')
@@ -186,11 +186,11 @@ if __name__ == '__main__':
     if options.emu not in TERM_EMUS.keys():
         raise Exception('Unknown terminal emulator: ' + options.emu)
 
-    if options.irc not in IRCS.keys():
+    if options.irc not in IRC_CLIENTS.keys():
         raise Exception('Unknown irc client: ' + options.irc)
 
     if options.start or not options.connect:
-        start_irc(TERM_EMUS[options.emu], options.session, IRCS[options.irc])
+        start_irc(TERM_EMUS[options.emu], options.session, IRC_CLIENTS[options.irc])
 
     if options.connect or not options.start:
         connect_irc(TERM_EMUS[options.emu], options.session)
