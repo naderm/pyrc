@@ -51,7 +51,9 @@ def screen_defaults():
         try:
             copy('/usr/share/doc/screen/examples/screenrc', screenrc)
             f = open(screenrc, 'a')
-            f.write('\ndefutf8 on\n')
+            f.write('\n'
+                    'defutf8 on\n'
+                    'defnonblock on\n')
             f.close()
         except OSError as e:
             print(e)
