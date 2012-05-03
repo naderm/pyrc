@@ -13,8 +13,8 @@ TERM_EMUS = {
         'defaults': 'screen_defaults()',
         },
     'tmux': {
-        'start': ['tmux', 'new', '-ds'],
-        'connect': ['tmux', 'attach', '-t'],
+        'start': ['tmux', '-u', 'new', '-ds'],
+        'connect': ['tmux', '-u', 'attach', '-t'],
         'list': ['tmux', 'ls'],
         },
     }
