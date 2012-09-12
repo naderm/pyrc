@@ -1,9 +1,15 @@
 #!/usr/bin/env python
-
 # pyrc - Wrapper to make it easier for ocf users to use irc
 # Author: Nader Morshed
-# Version: 0.0.6
+# Version: 0.0.7
 # Requires python >= 2.4 (2.6?)
+
+import os
+import sys
+import optparse
+import shutil
+from subprocess import call, Popen, PIPE
+import time
 
 TERM_EMUS = {
     'screen': {
@@ -42,14 +48,11 @@ LOG_BY_DEFAULT = True
 def screen_defaults():
     """Copies over the system default screen configuration and enables UTF-8."""
 
-    from shutil import copy
-    from os import path, environ
+    screenrc = os.path.join(os.environ['HOME'], '.screenrc')
 
-    screenrc = path.join(environ['HOME'], '.screenrc')
-
-    if not path.isfile(screenrc):
+    if not os.path.isfile(screenrc):
         try:
-            copy('/usr/share/doc/screen/examples/screenrc', screenrc)
+            shutil.copy('/usr/share/doc/screen/examples/screenrc', screenrc)
             f = open(screenrc, 'a')
             f.write('\n'
                     'defutf8 on\n'
@@ -60,13 +63,18 @@ def screen_defaults():
 
 def irssi_defaults():
     """Creates the default configuration for irssi with the ocf server included."""
-    from os import path, sep, environ
 
-    irssi_config = path.join(environ['HOME'], '.irssi', 'config')
+    irssi_config = os.path.join(os.environ['HOME'], '.irssi', 'config')
 
-    if not path.isfile(irssi_config):
+    if not os.path.isfile(irssi_config):
         try:
-            etc = open(path.join(sep, 'etc', 'irssi.conf'))
+            etc = open(os.path.join(os.sep, 'etc', 'irssi.conf'))
+
+            try:
+                os.mkdir(os.path.split(irssi_config)[0])
+            except OSError:
+                pass
+
             out = open(irssi_config, 'w')
             core = False
 
@@ -119,7 +127,7 @@ def irssi_defaults():
 
             etc.close()
             out.close()
-        except OSError as e:
+        except IOError as e:
             print(e)
 
 def install_defaults(emu, irc):
@@ -134,36 +142,27 @@ def install_defaults(emu, irc):
 def start_irc(emu, session, irc):
     """Start a new irc client on a virtual terminal."""
 
-    from subprocess import call
-
     found = find_emu_sessions(emu, session)
 
     if not found:
-        from time import sleep
-
         install_defaults(emu, irc)
         call(emu['start'] + [session, irc['process']])
 
         # Sleep to avoid weird screen resize issues
-        sleep(1)
+        time.sleep(1)
 
 def find_emu_sessions(emu, session):
     """Checks if the terminal emulator session is already open."""
 
-    from subprocess import Popen, PIPE
-    from sys import getdefaultencoding, version_info
-
     out = Popen(emu['list'], stdout=PIPE, stderr=PIPE).stdout
 
-    if version_info[0] >= 3:
-        out = [str(i, encoding=getdefaultencoding()) for i in out]
+    if sys.version_info[0] >= 3:
+        out = [str(i, encoding=sys.getdefaultencoding()) for i in out]
 
     return [line for line in out if session in line]
-    
+
 def connect_irc(emu, session):
     """Connect to an existing virtual terminal session."""
-
-    from subprocess import call
 
     if find_emu_sessions(emu, session):
         call(emu['connect'] + [session])
@@ -171,11 +170,8 @@ def connect_irc(emu, session):
         raise Exception('irc session does not exist')
 
 if __name__ == '__main__':
-    import sys
-    from optparse import OptionParser
-
     # Should be replaced with argparse, but this gives us a lower version requirement
-    parser = OptionParser()
+    parser = optparse.OptionParser()
     parser.add_option('-s', '--start', action='store_true', default=False,
                       help='Just start the irc client, don\'t connect to it')
     parser.add_option('-c', '--connect', action='store_true', default=False,
