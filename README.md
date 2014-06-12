@@ -23,7 +23,7 @@ For more information, see the help flag:
       -c, --connect         Don't start the irc client, only connect to it if
                             possible
       -e EMU, --emu=EMU     terminal emulator to use: screen, tmux [default:
-                            screen]
+                            tmux]
       -i IRC, --irc=IRC     irc client to use: irssi [default: irssi]
       -n SESSION, --session=SESSION
                             name to give to terminal emulator session
